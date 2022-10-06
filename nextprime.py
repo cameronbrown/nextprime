@@ -59,7 +59,7 @@ def next_prime(n: int) -> int:
         return 2
 
     # Algorithm assumes an even n.  We can safely use n+1 as a basis
-    # when n is odd because it can't be prime (evens can never be prime)
+    # when n is odd and >2 (even numbers >2 can never be prime)
     if is_odd(n):
         n += 1
 
@@ -90,16 +90,18 @@ def next_prime(n: int) -> int:
         debug(f"   Added {len(non_prime_offsets)} non-prime offsets:")
         debug(f"     {sorted(non_prime_offsets)}")
 
+        last_offset = 0
         for test_offset in test_offsets:
             if test_offset not in non_prime_offsets:
                 debug(f"   Found prime at offset {test_offset}")
                 return n + test_offset
+            last_offset = test_offset
 
         # No primes found in range. Search a new range of integers
         # starting where we left off.
-        debug(f"   No primes found from {n} to {n + test_offset}.")
-        n += test_offset + 1  # start n at first even int after last checked
-        debug(f"   Now looking for primes from {n} to {n + test_offset}.")
+        debug(f"   No primes found from {n} to {n + last_offset}.")
+        n += last_offset + 1  # start n at first even int after last checked
+        debug(f"   Now looking for primes from {n} to {n + last_offset}.")
 
 
 def is_prime_by_trial_division(n: int) -> int:
@@ -144,5 +146,4 @@ if __name__ == "__main__":
     if args.test:
         verbose_tests()
     else:
-        np = next_prime(args.target)
-        print(np)
+        print(next_prime(args.target))
